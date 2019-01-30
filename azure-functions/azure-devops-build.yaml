@@ -1,0 +1,69 @@
+name: 1.0$(Rev:.rr)
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - AzureFunctions/function-test
+    
+resources:
+- repo: self
+
+queue:
+  name: Hosted VS2017
+  demands: 
+  - msbuild
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: dotnet restore
+  inputs:
+    command: restore
+    projects: '*/function-test/**/*.csproj'
+    
+- task: DotNetCoreCLI@2
+  displayName: dotnet build
+  inputs:
+    command: build
+    arguments: '--configuration Release --no-restore'
+    projects: '*/function-test/**/*.csproj'
+    
+- task: DotNetCoreCLI@2
+  displayName: Ping - dotnet publish
+  inputs:
+    command: publish
+    arguments: 'AzureFunctions/function-test/ping/ping.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/ping'
+    publishWebProjects: false
+    zipAfterPublish: false
+    modifyOutputPath: false
+    
+- task: DotNetCoreCLI@2
+  displayName: Timer - dotnet publish
+  inputs:
+    command: publish
+    arguments: 'AzureFunctions/function-test/timer/timer.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/timer'
+    publishWebProjects: false
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+- task: CopyFiles@2
+  displayName: Ping - Copy ARM template to Build.ArtifactsStagingDirectory
+  inputs:
+    SourceFolder: 'AzureFunctions/function-test/ping'
+    Contents: 'azuredeploy.json'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/ping'
+    
+- task: CopyFiles@2
+  displayName: Timer - Copy ARM template to Build.ArtifactsStagingDirectory
+  inputs:
+    SourceFolder: 'AzureFunctions/function-test/timer'
+    Contents: 'azuredeploy.json'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/timer'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)/Release'
+  condition: succeededOrFailed()
