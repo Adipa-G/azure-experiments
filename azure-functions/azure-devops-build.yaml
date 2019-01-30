@@ -21,14 +21,14 @@ steps:
   displayName: dotnet restore
   inputs:
     command: restore
-    projects: '*/azure-functions/**/*.csproj'
+    projects: 'azure-functions/**/*.csproj'
     
 - task: DotNetCoreCLI@2
   displayName: dotnet build
   inputs:
     command: build
     arguments: '--configuration Release --no-restore'
-    projects: '*/azure-functions/**/*.csproj'
+    projects: 'azure-functions/**/*.csproj'
     
 - task: DotNetCoreCLI@2
   displayName: Ping - dotnet publish
