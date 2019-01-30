@@ -6,7 +6,7 @@ trigger:
     - master
   paths:
     include:
-    - AzureFunctions/function-test
+    - azure-functions
     
 resources:
 - repo: self
@@ -21,20 +21,20 @@ steps:
   displayName: dotnet restore
   inputs:
     command: restore
-    projects: '*/function-test/**/*.csproj'
+    projects: '*/azure-functions/**/*.csproj'
     
 - task: DotNetCoreCLI@2
   displayName: dotnet build
   inputs:
     command: build
     arguments: '--configuration Release --no-restore'
-    projects: '*/function-test/**/*.csproj'
+    projects: '*/azure-functions/**/*.csproj'
     
 - task: DotNetCoreCLI@2
   displayName: Ping - dotnet publish
   inputs:
     command: publish
-    arguments: 'AzureFunctions/function-test/ping/ping.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/ping'
+    arguments: 'azure-functions/ping/ping.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/ping'
     publishWebProjects: false
     zipAfterPublish: false
     modifyOutputPath: false
@@ -43,7 +43,7 @@ steps:
   displayName: Timer - dotnet publish
   inputs:
     command: publish
-    arguments: 'AzureFunctions/function-test/timer/timer.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/timer'
+    arguments: 'azure-functions/timer/timer.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/timer'
     publishWebProjects: false
     zipAfterPublish: false
     modifyOutputPath: false
@@ -51,14 +51,14 @@ steps:
 - task: CopyFiles@2
   displayName: Ping - Copy ARM template to Build.ArtifactsStagingDirectory
   inputs:
-    SourceFolder: 'AzureFunctions/function-test/ping'
+    SourceFolder: 'azure-functions/ping'
     Contents: 'azuredeploy.json'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/ping'
     
 - task: CopyFiles@2
   displayName: Timer - Copy ARM template to Build.ArtifactsStagingDirectory
   inputs:
-    SourceFolder: 'AzureFunctions/function-test/timer'
+    SourceFolder: 'azure-functions/timer'
     Contents: 'azuredeploy.json'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/timer'
 
