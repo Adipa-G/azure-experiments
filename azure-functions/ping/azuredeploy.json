@@ -43,11 +43,7 @@
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[reference(resourceId('microsoft.insights/components/', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
-            },
-			{
-			  "name": "FUNCTIONS_EXTENSION_VERSION",
-			  "value": "beta"
-			}
+            }
           ]
         }
       }
