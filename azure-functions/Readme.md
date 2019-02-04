@@ -27,26 +27,26 @@ This function demonstrates the timer trigger. The ARM template demonstrate hosti
        *  Resource group : Enter the resource group name created before
        *  Location : Select the desired location (this will not be used as ARM templates will use the location of the resource group)
        *  Template location : < Select "Linked Artifact" option >
-       *  Template : $(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/ping/azuredeploy.json
-       *  Override template parameters : -appInsightsName function-apps-insights -functionAppName ping-fa
+       *  Template : `$(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/ping/azuredeploy.json`
+       *  Override template parameters : `-appInsightsName function-apps-insights -functionAppName ping-fa`
        *  Deployment mode : < Select "Incremental" option >
 
   2. Azure resource group deployment  (select the same options as previous step except for following)
         
-       *  Template : $(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/timer/azuredeploy.json
-       *  Override template parameters : -hostingPlanName function-apps-asp -appInsightsName function-apps-insights -storageAccountName function0apps0st -functionAppName timer-fa
+       *  Template : `$(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/timer/azuredeploy.json`
+       *  Override template parameters : `-hostingPlanName function-apps-asp -appInsightsName function-apps-insights -storageAccountName function0apps0st -functionAppName timer-fa`
 
   3. Azure app service deployment
 
        *  Azure subscription : < Select the service connection >
        *  App Type : < Select "FunctionApp" option >
        *  App Service name : ping-fa
-       *  Package or folder : $(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/ping
+       *  Package or folder : `$(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/ping`
     
 
   4. Azure app service deployment (select the same options as previous step except for following)
        *  App Service name : timer-fa
-       *  Package or folder : $(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/timer
+       *  Package or folder : `$(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/timer`
 
  *  Queue a release build.
    
