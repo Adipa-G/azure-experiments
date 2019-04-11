@@ -29,7 +29,7 @@
   },
   "resources": [
     {
-      "name": "[concat(parameters('storageAccountName'), '/Microsoft.EventGrid/event-grid-subscription'))]",
+      "name": "[concat(parameters('storageAccountName'), '/Microsoft.EventGrid/event-grid-subscription')]",
       "type": "Microsoft.Storage/storageAccounts/providers/eventSubscriptions",
       "apiVersion": "2018-01-01",
       "properties": {
