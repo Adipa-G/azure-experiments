@@ -45,11 +45,16 @@
 				"accountType": "Standard_LRS"
 			}
 		}, {
-			"apiVersion": "2015-08-01",
+			"apiVersion": "2016-08-01",
 			"type": "Microsoft.Web/sites",
 			"name": "[parameters('functionAppName')]",
 			"location": "[resourceGroup().location]",
 			"kind": "functionapp",
+      "properties": {
+        "name": "[parameters('functionAppName')]",
+        "enabled": true,
+        "reserved": false
+      },
 			"resources": [{
 					"name": "appsettings",
 					"type": "config",
@@ -64,11 +69,11 @@
 
 						"APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components/', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
 					},
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]",
-          "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
-          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-        ]
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]",
+						"[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+						"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+					]
 				}
 			],
 			"dependsOn": [
