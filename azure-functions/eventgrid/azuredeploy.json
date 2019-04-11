@@ -60,16 +60,15 @@
 						"StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')),'2015-05-01-preview').key1)]",
 						"AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')),'2015-05-01-preview').key1)]",
 
-						"AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')),'2015-05-01-preview').key1)]",
 						"AzureWebJobsSecretStorageType": "files",
 
 						"APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components/', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
 					},
-					"dependsOn": [
-						"[resourceId('Microsoft.Web/sites', variables('functionAppName'))]",
-						"[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
-						"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-					]
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]",
+          "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        ]
 				}
 			],
 			"dependsOn": [
