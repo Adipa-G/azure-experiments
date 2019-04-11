@@ -2,12 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "hostingPlanName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the hosting plan where the app is hosted."
-      }
-    },
     "appInsightsName": {
       "type": "string",
       "metadata": {
@@ -28,25 +22,6 @@
     }
   },
   "resources": [
-    {
-      "apiVersion": "2016-03-01",
-      "name": "[parameters('hostingPlanName')]",
-      "type": "Microsoft.Web/serverfarms",
-      "location": "[resourceGroup().location]",
-      "kind": "",
-      "properties": {
-        "name": "[parameters('hostingPlanName')]",
-        "workerSize": "0",
-        "workerSizeId": "0",
-        "numberOfWorkers": "1",
-        "reserved": false,
-        "hostingEnvironment": ""
-      },
-      "sku": {
-        "Tier": "Standard",
-        "Name": "S1"
-      }
-    },
     {
       "apiVersion": "2014-08-01",
       "name": "[parameters('appInsightsName')]",
@@ -76,11 +51,9 @@
       "location": "[resourceGroup().location]",
       "kind": "functionapp",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "[resourceId('microsoft.insights/components', parameters('appInsightsName'))]"
       ],
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
           "appSettings": [
             {

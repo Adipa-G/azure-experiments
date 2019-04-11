@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ping", "ping\ping.csproj", "{5C2A5411-E2E9-46BB-83D1-3077EBAD1CD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timer", "timer\timer.csproj", "{99B77AE9-37C5-4D6E-8309-E070B808F55A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "timer", "timer\timer.csproj", "{99B77AE9-37C5-4D6E-8309-E070B808F55A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eventgrid", "eventgrid\eventgrid.csproj", "{D2BCF77E-A3ED-442B-BF8F-198E0C38F4FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{99B77AE9-37C5-4D6E-8309-E070B808F55A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99B77AE9-37C5-4D6E-8309-E070B808F55A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99B77AE9-37C5-4D6E-8309-E070B808F55A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2BCF77E-A3ED-442B-BF8F-198E0C38F4FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2BCF77E-A3ED-442B-BF8F-198E0C38F4FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2BCF77E-A3ED-442B-BF8F-198E0C38F4FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2BCF77E-A3ED-442B-BF8F-198E0C38F4FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

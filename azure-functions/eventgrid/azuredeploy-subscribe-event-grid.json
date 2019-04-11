@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the storage account used to store webjobs."
+      }
+    },
+    "functionAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the function app."
+      }
+    },
+    "functionName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the function processing the events."
+      }
+    },
+    "functionHostMasterKey": {
+      "type": "string",
+      "metadata": {
+        "description": "The master key of the function."
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "[concat(parameters('storageAccountName'), '/Microsoft.EventGrid/event-grid-subscription'))]",
+      "type": "Microsoft.Storage/storageAccounts/providers/eventSubscriptions",
+      "apiVersion": "2018-01-01",
+      "properties": {
+        "destination": {
+          "endpointType": "WebHook",
+          "properties": {
+            "endpointUrl": "[concat('https://', parameters('functionAppName') , '.azurewebsites.net/runtime/webhooks/EventGrid?functionName=', parameters('functionName'), '&code=', parameters('functionHostMasterKey'))]"
+          }
+        },
+        "filter": {
+          "subjectBeginsWith": "",
+          "subjectEndsWith": "",
+          "isSubjectCaseSensitive": false,
+          "includedEventTypes": [
+            "All"
+          ]
+        }
+      }
+    }
+  ]
+}

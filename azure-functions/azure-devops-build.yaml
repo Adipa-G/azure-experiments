@@ -47,6 +47,15 @@ steps:
     publishWebProjects: false
     zipAfterPublish: false
     modifyOutputPath: false
+    
+- task: DotNetCoreCLI@2
+  displayName: Event Grid - dotnet publish
+  inputs:
+    command: publish
+    arguments: 'azure-functions/eventgrid/eventgrid.csproj --configuration Release --no-restore --output $(Build.ArtifactStagingDirectory)/Release/eventgrid'
+    publishWebProjects: false
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: Ping - Copy ARM template to Build.ArtifactsStagingDirectory
@@ -62,6 +71,17 @@ steps:
     Contents: 'azuredeploy.json'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/timer'
 
+- task: CopyFiles@2
+  displayName: Timer - Copy ARM template to Build.ArtifactsStagingDirectory
+  inputs:
+    SourceFolder: 'azure-functions/eventgrid'
+    Contents: | 
+        azuredeploy.json
+        azuredeploy-subscribe-event-grid.json
+        get-function-host-mater-key.ps1
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/eventgrid'
+
+    
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
