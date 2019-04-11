@@ -40,6 +40,9 @@
       "apiVersion": "2018-02-01",
       "location": "[resourceGroup().location]",
       "kind": "StorageV2",
+      "sku": {
+        "name": "Standard_LRS"
+      },
       "properties": {
         "accountType": "Standard_LRS"
       }

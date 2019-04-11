@@ -72,7 +72,7 @@ steps:
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Release/timer'
 
 - task: CopyFiles@2
-  displayName: Timer - Copy ARM template to Build.ArtifactsStagingDirectory
+  displayName: Event Grid - Copy ARM template to Build.ArtifactsStagingDirectory
   inputs:
     SourceFolder: 'azure-functions/eventgrid'
     Contents: | 
