@@ -10,7 +10,12 @@ This function is a liveness check endpoint triggered via a http request. The ARM
 
 ## Timer
 
-This function demonstrates the timer trigger. The ARM template demonstrate hosting using an app service plan.
+This function demonstrates the timer trigger. The ARM template demonstrate hosting using an app service plan. The funtion logs an event to Application insights.
+
+## Event Grid
+
+This function demonstrates the event grid trigger. When a file is uploaded into the blob storage, the function is triggerd using Event Grid. The funtion logs an event to Application insights.
+
 
 ## Setting up
 
