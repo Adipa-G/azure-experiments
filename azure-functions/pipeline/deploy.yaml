@@ -15,5 +15,5 @@ steps:
     azureSubscription: '${{parameters.serviceConnectionName}}'
     resourceGroupName: '${{parameters.resourceGroupName}}'
     location: '${{parameters.location}}'
-    csmFile: '$(System.DefaultWorkingDirectory)\\drop\\ping\\azuredeploy.json'
+    csmFile: '$(Pipeline.Workspace)\\drop\\ping\\azuredeploy.json'
     overrideParameters: '-appInsightsName function-apps-insights -functionAppName ${{parameters.pingFunctionAppName}}'
