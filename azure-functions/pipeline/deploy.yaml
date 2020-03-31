@@ -5,7 +5,13 @@ parameters:
   type: string
 - name: location
   type: string
+- name: functionStorageName
+  type: string
 - name: pingFunctionAppName
+  type: string
+- name: timerFunctionAppName
+  type: string
+- name: eventGridFunctionAppName
   type: string
 
 steps:
@@ -17,3 +23,70 @@ steps:
     location: '${{parameters.location}}'
     csmFile: '$(Pipeline.Workspace)\\drop\\ping\\azuredeploy.json'
     overrideParameters: '-appInsightsName function-apps-insights -functionAppName ${{parameters.pingFunctionAppName}}'
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Timer - Azure Deployment:Create Or Update Resource Group'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    resourceGroupName: '${{parameters.resourceGroupName}}'
+    location: '${{parameters.location}}'
+    csmFile: '$(Pipeline.Workspace)\\drop\\timer\\azuredeploy.json'
+    overrideParameters: '-hostingPlanName function-apps-asp -appInsightsName function-apps-insights -storageAccountName ${{parameters.functionStorageName}} -functionAppName ${{parameters.timerFunctionAppName}}'
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Event Grid- Azure Deployment:Create Or Update Resource Group'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    resourceGroupName: '${{parameters.resourceGroupName}}'
+    location: '${{parameters.location}}'
+    csmFile: '$(Pipeline.Workspace)\\drop\\eventgrid\\azuredeploy.json'
+    overrideParameters: '-appInsightsName function-apps-insights -storageAccountName ${{parameters.functionStorageName}} -functionAppName ${{parameters.eventGridFunctionAppName}}'
+    
+- task: AzureRmWebAppDeployment@3
+  displayName: 'Azure App Service Deploy: ${{parameters.pingFunctionAppName}}'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    appType: functionapp
+    WebAppName: ${{parameters.pingFunctionAppName}}
+    Package: '$(Pipeline.Workspace)\\drop\\ping'
+    
+- task: AzureRmWebAppDeployment@3
+  displayName: 'Azure App Service Deploy: ${{parameters.timerFunctionAppName}}'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    appType: functionapp
+    WebAppName: ${{parameters.timerFunctionAppName}}
+    Package: '$(Pipeline.Workspace)\\drop\\timer'
+    
+- task: AzureRmWebAppDeployment@3
+  displayName: 'Azure App Service Deploy: ${{parameters.eventGridFunctionAppName}}'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    appType: functionapp
+    WebAppName: ${{parameters.eventGridFunctionAppName}}
+    Package: '$(Pipeline.Workspace)\\drop\\eventgrid'
+    
+- task: AzurePowerShell@3
+  displayName: 'Azure PowerShell script: Register Event Grid Provider'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    ScriptType: InlineScript
+    Inline: 'Register-AzureRmResourceProvider -ProviderNamespace “Microsoft.EventGrid”'
+    azurePowerShellVersion: LatestVersion
+    
+- task: AzurePowerShell@3
+  displayName: 'Azure PowerShell script: Get Function Master Key'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    ScriptPath: '$(Pipeline.Workspace)\\drop\\eventgrid\\get-function-host-mater-key.ps1'
+    ScriptArguments: '${{parameters.resourceGroupName}} ${{parameters.eventGridFunctionAppName}}'
+    azurePowerShellVersion: LatestVersion
+    
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Event Grid Subscription - Azure Deployment:Create Or Update Resource Group'
+  inputs:
+    azureSubscription: '${{parameters.serviceConnectionName}}'
+    resourceGroupName: '${{parameters.resourceGroupName}}'
+    location: '${{parameters.location}}'
+    csmFile: '$(Pipeline.Workspace)\\drop\\eventgrid\\azuredeploy-subscribe-event-grid.json'
+    overrideParameters: '-functionAppName ${{parameters.eventGridFunctionAppName}} -functionName eventgridfunction -functionHostMasterKey $(EventGridFunctionMasterKey) -storageAccountName ${{parameters.functionStorageName}}'

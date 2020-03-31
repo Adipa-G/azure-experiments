@@ -35,5 +35,9 @@ stages:
                 serviceConnectionName: "subscription-service-connection"
                 resourceGroupName: "function-apps-rg"
                 location: "North Europe"
+                functionStorageName: "function0apps0st"
                 pingFunctionAppName: "ping-fa"
+                timerFunctionAppName: "timer-fa"
+                eventGridFunctionAppName: "event-grid-fa"
+                
 
