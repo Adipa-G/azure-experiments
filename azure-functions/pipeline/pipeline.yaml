@@ -18,7 +18,6 @@ stages:
     steps:
     - template: "build.yaml"
 
-stages:
 - stage: deploy
   displayName: Deploy
   jobs:
