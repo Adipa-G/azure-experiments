@@ -20,7 +20,7 @@ This function demonstrates the event grid trigger. When a file is uploaded into 
 ## Setting up
 
 * Clone this repository and create connected Azure DevOps pipeline with name "Azure-Functions-CI" (if you choose to use a different name make sure to update the paths in the release pipeline). Select the file `azure-devops-build.yaml` as the build definition.
-* Create a [service connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azdevops) to Azure subscription from Azure DevOps.
+* Create a [service connection](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azdevops) to Azure subscription from Azure DevOps and name it "subscription-service-connection".
 * Create a resource group in your Azure subscription
 * Run the build and make sure it succeeds.
 * Create a release pipeline from successful build and add following steps
