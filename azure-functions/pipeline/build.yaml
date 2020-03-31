@@ -1,21 +1,3 @@
-name: 1.0$(Rev:.rr)
-
-trigger:
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - azure-functions
-    
-resources:
-- repo: self
-
-queue:
-  name: Hosted VS2017
-  demands: 
-  - msbuild
-
 steps:
 - task: DotNetCoreCLI@2
   displayName: dotnet restore

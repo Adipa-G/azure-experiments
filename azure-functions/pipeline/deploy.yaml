@@ -1,0 +1,9 @@
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Ping - Azure Deployment:Create Or Update Resource Group'
+  inputs:
+    azureSubscription: 'subscription-service-connection'
+    resourceGroupName: 'function-apps-rg'
+    location: 'North Europe'
+    csmFile: '$(System.DefaultWorkingDirectory)/Azure-Functions-CI/drop/ping/azuredeploy.json'
+    overrideParameters: '-appInsightsName function-apps-insights -functionAppName ping-fa'

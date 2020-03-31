@@ -8,13 +8,28 @@ trigger:
     include:
     - azure-functions
     
-resources:
-- repo: self
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+  - job: Build
+    pool:
+      name: Default
+    steps:
+    - template: "build.yaml"
 
-queue:
-  name: Hosted VS2017
-  demands: 
-  - msbuild
+stages:
+- stage: deploy
+  displayName: Deploy
+  jobs:
+  - deployment:
+    displayName: Release
+    pool:
+      name: Default
+    environment: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: "deploy.yaml"
 
-steps:
-- template: build.yaml
