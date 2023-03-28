@@ -8,8 +8,6 @@ param identityName string
 param keyVaultName string
 @secure()
 param rootCertificateBase64 string
-@secure()
-param certficatePassword string
 param deployApim bool
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2022-07-01' existing = {
@@ -43,7 +41,7 @@ resource apim 'Microsoft.ApiManagement/service@2022-04-01-preview' = if (deployA
       {
         storeName: 'Root'
         encodedCertificate: rootCertificateBase64
-        certificatePassword: certficatePassword
+        certificatePassword: ''
       }
     ]
     hostnameConfigurations: [
@@ -51,7 +49,7 @@ resource apim 'Microsoft.ApiManagement/service@2022-04-01-preview' = if (deployA
         type:'Proxy'
         hostName: 'apim.${dnsName}'
         keyVaultId: 'https://${keyVaultName}${environment().suffixes.keyvaultDns}/secrets/vnet-internal-cert'
-        certificatePassword: certficatePassword
+        certificatePassword: ''
         identityClientId : mi.properties.clientId
         negotiateClientCertificate:false
         defaultSslBinding: true 

@@ -43,8 +43,7 @@ module appEnvModule 'appsvc-env.bicep' = {
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     dnsName: dnsName
-    certificatePassword: kv.getSecret('cert-password')
-    wildcardCertificateBase64: loadFileAsBase64('certs/vnet-internal-cert.pfx')
+    wildcardCertificateBase64: kv.getSecret('vnet-internal-cert')
     deployAppEnv: deployAppEnv
   }
   dependsOn: [vnetModule]
@@ -61,8 +60,7 @@ module apimModule 'apim.bicep' = {
     dnsName: dnsName
     keyVaultName: keyVaultName
     identityName: miName
-    certficatePassword: kv.getSecret('cert-password')
-    rootCertificateBase64: loadFileAsBase64('certs/root-cert.pfx')
+    rootCertificateBase64: kv.getSecret('root-cert')
     deployApim: deployApim
   }
   dependsOn: [vnetModule]
