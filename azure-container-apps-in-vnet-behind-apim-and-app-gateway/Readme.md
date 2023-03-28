@@ -23,9 +23,7 @@ Pre generated certificates are located in `\bicep\certs` folder. All passwords f
     .\openssl.exe genrsa -des3 -out root-ca.key 4096
     #2. Create and self sign the root certificate. When prompted enter common name as "internal".
     .\openssl.exe req -x509 -new -nodes -key .\root-ca.key -sha256 -days 1024 -out .\root-cert.crt
-    #3. Create the .cer file from the root certificate.
-    .\openssl.exe x509 -inform pem -in .\root-cert.crt -outform der -out .\root-cert.cer
-    #4. Create a PFX file
+    #3. Create a PFX file
     .\openssl.exe pkcs12 -export -out .\root-cert.pfx -inkey .\root-ca.key -in .\root-cert.crt
     ```
   * Second step is to create the signing request and generate the wild card certificate. For this step, the common name is used as `*.vnet.internal`.
@@ -33,7 +31,7 @@ Pre generated certificates are located in `\bicep\certs` folder. All passwords f
     #1. Create the certificate request. Use the common name as "*.vnet.internal".
     .\openssl.exe req -new -key .\root-ca.key -out .\vnet-internal-cert.csr
     #2. Generate the certificate using the root certificate.
-    .\openssl.exe x509 -req -in .\vnet-internal-cert.csr -CA .\root-ca.crt -CAkey .\root-CA.key -CAcreateserial -out .\vnet-internal-cert.crt -days 500 -sha256
+    .\openssl.exe x509 -req -in .\vnet-internal-cert.csr -CA .\root-cert.crt -CAkey .\root-ca.key -CAcreateserial -out .\vnet-internal-cert.crt -days 500 -sha256
     #3. Export the wildcard certificate.
     .\openssl.exe pkcs12 -export -out .\vnet-internal-cert.pfx -inkey .\root-ca.key -in .\vnet-internal-cert.crt
     ```
