@@ -74,7 +74,7 @@ resource appgw 'Microsoft.Network/applicationGateways@2022-07-01' = if (deployAp
     trustedRootCertificates:[{
       name: 'root_cert_internaldomain'
       properties: {
-        keyVaultSecretId: 'https://${keyVaultName}${environment().suffixes.keyvaultDns}/secrets/internal-root-cert'
+        keyVaultSecretId: 'https://${keyVaultName}${environment().suffixes.keyvaultDns}/secrets/root-cert'
       }
     }
     ]

@@ -12,7 +12,7 @@ The design is as below.
 ## Setting up
 ### Generating the certificate chain
 
-Since this setup uses a private dns zone, first we need to generate certificate chain in order to communicate between application gateway, API Management service and the container application. The certificate common name should match the private DNS name. In this instance we use the DNS name as `vnet.internal`. Because of this we generate a root certificate with common name `internal`, a wildcard certificate with a common name `*.vnet.internal`, and a certificate for APIM service with common name `apim.vnet.internal`. The certificate common names should match the DNS name in order to establish the communication between Application Gateway, APIM service and the Container applications. 
+Since this setup uses a private dns zone, first we need to generate certificate chain in order to communicate between application gateway, API Management service and the container application. The certificate common name should match the private DNS name. In this instance we use the DNS name as `vnet.internal`. Because of this we generate a root certificate with common name `internal`, a wildcard certificate with a common name `*.vnet.internal`. 
 
 Pre generated certificates are located in `\bicep\certs` folder. All passwords for these certificates are set to `1234`
   
@@ -20,31 +20,22 @@ Pre generated certificates are located in `\bicep\certs` folder. All passwords f
 
     ```
     #1. First generate the root key.
-    .\openssl.exe genrsa des3 -out root-ca.key 4096
+    .\openssl.exe genrsa -des3 -out root-ca.key 4096
     #2. Create and self sign the root certificate. When prompted enter common name as "internal".
-    .\openssl.exe req -x509 -new -nodes -key .\root-ca.key -sha256 -days 1024 -out .\root-ca.crt
+    .\openssl.exe req -x509 -new -nodes -key .\root-ca.key -sha256 -days 1024 -out .\root-cert.crt
     #3. Create the .cer file from the root certificate.
-    .\openssl.exe x509 -inform pem -in .\root-ca.crt -outform der -out .\root-ca.cer
+    .\openssl.exe x509 -inform pem -in .\root-cert.crt -outform der -out .\root-cert.cer
     #4. Create a PFX file
-    .\openssl.exe pkcs12 -export -out .\root-ca.pfx -inkey .\root-ca.key -in .\root-ca.crt
+    .\openssl.exe pkcs12 -export -out .\root-cert.pfx -inkey .\root-ca.key -in .\root-cert.crt
     ```
   * Second step is to create the signing request and generate the wild card certificate. For this step, the common name is used as `*.vnet.internal`.
     ```
     #1. Create the certificate request. Use the common name as "*.vnet.internal".
-    .\openssl.exe req -new -key .\root-ca.key -out .\vnet-internal.csr
+    .\openssl.exe req -new -key .\root-ca.key -out .\vnet-internal-cert.csr
     #2. Generate the certificate using the root certificate.
-    .\openssl.exe x509 -req -in .\vnet-internal.csr -CA .\root-ca.crt -CAkey .\root-CA.key -CAcreateserial -out .\vnet-internal.crt -days 500 -sha256
+    .\openssl.exe x509 -req -in .\vnet-internal-cert.csr -CA .\root-ca.crt -CAkey .\root-CA.key -CAcreateserial -out .\vnet-internal-cert.crt -days 500 -sha256
     #3. Export the wildcard certificate.
-    .\openssl.exe pkcs12 -export -out .\vnet-internal.pfx -inkey .\root-ca.key -in .\vnet-internal.crt
-    ```
-  * Third step is to generate the certificate for the APIM. For this the common name is used as `apim.vnet.internal`.
-    ```
-    #1. Create the certificate request. Use the common name as "apim.vnet.internal".
-    .\openssl.exe req -new -key .\root-ca.key -out .\apim-vnet-internal.csr
-    #2. Generate the certificate using the root certificate.
-    .\openssl.exe x509 -req -in .\apim-vnet-internal.csr -CA .\root-ca.crt -CAkey .\root-CA.key -CAcreateserial -out .\apim-vnet-internal.crt -days 500 -sha256
-    #3. Export the certificate as a PFX file.
-    .\openssl.exe pkcs12 -export -out .\apim-vnet-internal.pfx -inkey .\root-ca.key -in .\apim-vnet-internal.crt
+    .\openssl.exe pkcs12 -export -out .\vnet-internal-cert.pfx -inkey .\root-ca.key -in .\vnet-internal-cert.crt
     ```
 
 ### Deploy infrastructure
@@ -57,8 +48,8 @@ Ideally, the infrastructure deployment should use a CD pipeline. However in this
 * Use a new "Template Deployment" to deploy the resulting ARM template (`prerequisites.JSON`) to the resource group.
 * Once the deployment is completed, modify the key vault permissions to enable writing and add following secrets to the key vault.
   * create a secret 'cert-password' and store the certificate password (assuming the same password is used for all certificates. Ideally passwords should be different, but to simplify, this example use the same password).
-  * upload the apim-vnet-internal.pfx certificate with the key 'apim-vnet-internal'.
-  * upload the root-ca.pfx with the key 'internal-root-cert'.
+  * upload the root-cert.pfx with the key 'root-cert'.
+  * upload the vnet-internal-cert.pfx certificate with the key 'vnet-internal-cert'.
 * Generate the ARM template from the `infra.bicep`.
   ```
   az bicep build --file .\infra.bicep

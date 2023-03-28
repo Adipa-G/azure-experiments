@@ -5,7 +5,9 @@ param subnetName string
 param logAnalyticsWorkspaceId string
 param dnsName string
 @secure()
-param certPassword string
+param wildcardCertificateBase64 string
+@secure()
+param certificatePassword string
 param deployAppEnv bool
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2022-07-01' existing = {
@@ -28,8 +30,8 @@ resource appEnvironment 'Microsoft.App/managedEnvironments@2022-06-01-preview' =
     }
     customDomainConfiguration: {
       dnsSuffix: dnsName
-      certificateValue: loadFileAsBase64('certs/vnet.internal.pfx')
-      certificatePassword: certPassword
+      certificateValue: wildcardCertificateBase64
+      certificatePassword: certificatePassword
     }
     vnetConfiguration: {
       internal: true
