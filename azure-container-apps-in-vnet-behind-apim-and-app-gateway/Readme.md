@@ -45,7 +45,6 @@ Ideally, the infrastructure deployment should use a CD pipeline. However in this
   ```
 * Use a new "Template Deployment" to deploy the resulting ARM template (`prerequisites.JSON`) to the resource group.
 * Once the deployment is completed, modify the key vault permissions to enable writing and add following secrets to the key vault.
-  * create a secret 'cert-password' and store the certificate password (assuming the same password is used for all certificates. Ideally passwords should be different, but to simplify, this example use the same password).
   * upload the root-cert.pfx with the key 'root-cert'.
   * upload the vnet-internal-cert.pfx certificate with the key 'vnet-internal-cert'.
 * Generate the ARM template from the `infra.bicep`.
